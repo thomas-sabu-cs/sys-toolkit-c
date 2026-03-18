@@ -16,6 +16,16 @@
 #include <time.h>
 #include <unistd.h>
 
+#ifndef MAP_ANONYMOUS
+#ifdef MAP_ANON
+#define MAP_ANONYMOUS MAP_ANON
+#else
+/* Fallback for platforms where MAP_ANONYMOUS is not exposed with current feature macros.
+ * On Linux this value is 0x20; on other platforms, anonymous mappings may not be available. */
+#define MAP_ANONYMOUS 0x20
+#endif
+#endif
+
 typedef struct cpu_sample {
     unsigned long long user;
     unsigned long long nice;

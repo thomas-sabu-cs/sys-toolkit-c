@@ -87,10 +87,23 @@ static void sys_log_format_prefix(char *buffer, size_t size, sys_log_level level
     }
 
     time_t now = time(NULL);
-    struct tm tm_now;
-    (void)localtime_r(&now, &tm_now);
+    struct tm *tm_ptr = NULL;
 
-    (void)strftime(buffer, size, "%Y-%m-%d %H:%M:%S", &tm_now);
+#if defined(_POSIX_VERSION)
+    {
+        static struct tm tm_storage;
+        tm_ptr = localtime_r(&now, &tm_storage);
+    }
+#else
+    tm_ptr = localtime(&now);
+#endif
+
+    if (tm_ptr == NULL) {
+        buffer[0] = '\0';
+        return;
+    }
+
+    (void)strftime(buffer, size, "%Y-%m-%d %H:%M:%S", tm_ptr);
 
     size_t len = strlen(buffer);
     if (len + 4U < size) {

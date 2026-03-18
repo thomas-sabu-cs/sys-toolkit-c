@@ -1,0 +1,1 @@
+/usr/bin/cc  -Wall -Wextra -Werror -pedantic -fstack-protector-all -g CMakeFiles/sys_toolkit_tests.dir/tests/test_main.c.o CMakeFiles/sys_toolkit_tests.dir/tests/test_sys_arena.c.o CMakeFiles/sys_toolkit_tests.dir/tests/test_sys_threadpool.c.o CMakeFiles/sys_toolkit_tests.dir/tests/test_sys_log.c.o -o sys_toolkit_tests  libsys_toolkit.a 

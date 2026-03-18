@@ -1,0 +1,2 @@
+/usr/bin/ar qc libsys_toolkit.a CMakeFiles/sys_toolkit.dir/src/sys_arena.c.o CMakeFiles/sys_toolkit.dir/src/sys_threadpool.c.o CMakeFiles/sys_toolkit.dir/src/sys_log.c.o
+/usr/bin/ranlib libsys_toolkit.a

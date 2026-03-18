@@ -1,0 +1,1 @@
+/usr/bin/cc  -Wall -Wextra -Werror -pedantic -fstack-protector-all -g CMakeFiles/sys_toolkit_benchmarks.dir/benchmarks/arena_bench.c.o -o sys_toolkit_benchmarks  libsys_toolkit.a 

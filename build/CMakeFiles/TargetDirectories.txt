@@ -1,0 +1,7 @@
+/proj/build/CMakeFiles/sys_toolkit.dir
+/proj/build/CMakeFiles/sys_toolkit_tests.dir
+/proj/build/CMakeFiles/sys_toolkit_benchmarks.dir
+/proj/build/CMakeFiles/sys_monitor.dir
+/proj/build/CMakeFiles/test.dir
+/proj/build/CMakeFiles/edit_cache.dir
+/proj/build/CMakeFiles/rebuild_cache.dir
