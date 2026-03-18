@@ -39,6 +39,8 @@ static void *sys_threadpool_worker(void *arg)
         if (task != NULL) {
             task(task_arg);
         }
+
+        atomic_fetch_sub_explicit(&pool->pending_tasks, 1U, memory_order_relaxed);
     }
 
     return NULL;
@@ -68,6 +70,7 @@ int sys_threadpool_init(sys_threadpool *pool, size_t thread_count, size_t queue_
     pool->tail = 0U;
     pool->count = 0U;
     pool->shutdown = 0;
+    atomic_init(&pool->pending_tasks, 0U);
 
     if (pthread_mutex_init(&pool->mutex, NULL) != 0 ||
         pthread_cond_init(&pool->cond_not_empty, NULL) != 0 ||
@@ -127,6 +130,8 @@ int sys_threadpool_submit(sys_threadpool *pool, sys_threadpool_task_fn fn, void 
     pool->task_args[pool->tail] = arg;
     pool->tail = (pool->tail + 1U) % pool->queue_capacity;
     pool->count++;
+
+    atomic_fetch_add_explicit(&pool->pending_tasks, 1U, memory_order_relaxed);
 
     (void)pthread_cond_signal(&pool->cond_not_empty);
     (void)pthread_mutex_unlock(&pool->mutex);

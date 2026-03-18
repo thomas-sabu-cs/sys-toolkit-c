@@ -15,6 +15,7 @@
 
 #include <pthread.h>
 #include <stddef.h>
+#include <stdatomic.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -39,6 +40,8 @@ typedef struct sys_threadpool {
     size_t head;
     size_t tail;
     size_t count;
+
+    _Atomic size_t pending_tasks;
 
     pthread_mutex_t mutex;
     pthread_cond_t cond_not_empty;

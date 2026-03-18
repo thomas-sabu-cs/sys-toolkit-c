@@ -124,3 +124,21 @@ A simple micro-benchmark for the arena allocator is provided:
 - **Concurrency**: Timer queues, work stealing, and IO integration can build on top of `sys_threadpool`.
 - **Logging**: Structured logging and per-module categories can be added while reusing the existing core.
 
+### Design Decisions
+
+- **Arena allocator vs frequent `malloc`**: `sys_arena` trades fine-grained frees for bulk reclamation with `sys_arena_reset`. Allocations become simple bump-pointer increments, which are dramatically cheaper than repeated `malloc`/`free` pairs. This design also:
+  - Reduces external fragmentation because the arena is a single contiguous region.
+  - Improves cache locality, since related allocations tend to live next to each other in memory and are walked linearly.
+  - Makes failure modes explicit: once capacity is exhausted, callers get a `NULL` and can decide when to reset or grow the arena.
+
+- **Pthreads over higher-level abstractions**: The thread pool is built directly on top of `pthread_t`, `pthread_mutex_t`, and condition variables rather than using C++ threads, libdispatch, or executor frameworks. This keeps the implementation:
+  - Portable to any POSIX-like environment where C17 and pthreads are available.
+  - Transparent for systems interviews, where being able to reason about wake-ups, spurious waits, and shutdown semantics is critical.
+  - Free from hidden scheduling policies, making it easier to discuss trade-offs such as queue bounding and back-pressure.
+
+- **Atomics for task accounting**: While queue operations themselves are protected by a mutex (to keep the data structure simple), the pool maintains an atomic `pending_tasks` counter using C11/C17 `<stdatomic.h>`. This allows:
+  - Lightweight, contention-free reads of “how much work is currently in flight” from observability code.
+  - Cheap increments/decrements on the hot path using relaxed memory order, avoiding additional mutex contention for the common case of simple metrics.
+  - A clear demonstration of how to mix coarse-grained locking with targeted atomic operations in real systems code.
+
+
