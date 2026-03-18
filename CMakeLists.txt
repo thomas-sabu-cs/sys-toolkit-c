@@ -59,6 +59,11 @@ if(SYS_TOOLKIT_ENABLE_BENCHMARKS)
     target_link_libraries(sys_toolkit_benchmarks PRIVATE sys_toolkit)
 endif()
 
+add_executable(sys_monitor
+    src/sys_monitor.c
+)
+target_link_libraries(sys_monitor PRIVATE sys_toolkit)
+
 # clang-format integration (best-effort)
 find_program(CLANG_FORMAT_BIN clang-format)
 if(CLANG_FORMAT_BIN)
@@ -81,6 +86,9 @@ if(CLANG_FORMAT_BIN)
     endif()
     if(TARGET sys_toolkit_benchmarks)
         add_dependencies(sys_toolkit_benchmarks format)
+    endif()
+    if(TARGET sys_monitor)
+        add_dependencies(sys_monitor format)
     endif()
     add_dependencies(sys_toolkit format)
 endif()
