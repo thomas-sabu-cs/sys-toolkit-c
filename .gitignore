@@ -1,0 +1,14 @@
+.DS_Store
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+*.o
+*.obj
+*.exe
+*.out
+sys_toolkit_test.log
+sys_toolkit_test*.log
+.vscode/
+.idea/

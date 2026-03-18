@@ -19,6 +19,7 @@ jobs:
 
       - name: Configure
         run: |
+          rm -rf build
           cmake -S . -B build -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Debug
 
       - name: Build
